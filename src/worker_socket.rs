@@ -7,27 +7,16 @@ pub fn get_master_stream() -> Result<net::TcpStream, Error> {
     let mut args = env::args();
     args.next();
 
-    let hostname: String = args.next().unwrap_or({
-        return Err(Error::WorkerError);
-    });
+    let hostname: String = args.next().unwrap();
     let port: u16 = args.next()
-                        .unwrap_or({
-                            return Err(Error::WorkerError);
-                        })
-                        .parse()
+                        .unwrap().parse()
                         .ok()
-                        .unwrap_or({
-                            return Err(Error::WorkerError);
-                        });
+                        .unwrap();
     let secret: u8 = args.next()
-                         .unwrap_or({
-                             return Err(Error::WorkerError);
-                         })
+                         .unwrap()
                          .parse()
                          .ok()
-                         .unwrap_or({
-                             return Err(Error::WorkerError);
-                         });
+                         .unwrap();
 
     let mut stream = try!(net::TcpStream::connect((&hostname[..], port)));
     let sbuf: [u8; 1] = [secret];
