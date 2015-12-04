@@ -49,7 +49,7 @@ impl MasterNode {
                                                                                 addr: A,
                                                                                 username: S,
                                                                                 bin_path: P)
-                                                                                -> Result<net::TcpStream, Error> {
+                                                                                -> Result<(u32, net::TcpStream), Error> {
         let secret: u8 = rand::random();
 
         // open TCP socket to remote host; create an SSH session and
@@ -76,8 +76,8 @@ impl MasterNode {
         }
 
         // start a new channel and set environment variables
+        let worker_id = self.session_store.len() as u32;
         {
-            let worker_id = self.session_store.len() as u32;
             // run the binary we copied over earlier
             let mut channel = try!(ssh_session.channel_session());
             try!(channel.exec(&format!("/tmp/dsock_binary \"{}\" \"{}\" \"{}\" \"{}\"",
@@ -94,6 +94,6 @@ impl MasterNode {
 
         self.session_store.push((ssh_socket, ssh_session));
 
-        Ok(tcp_socket)
+        Ok((worker_id, tcp_socket))
     }
 }
