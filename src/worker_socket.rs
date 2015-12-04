@@ -28,7 +28,7 @@ pub fn get_master_stream() -> Result<net::TcpStream, Error> {
                          .unwrap_or({
                              return Err(Error::WorkerError);
                          });
-    
+
     let mut stream = try!(net::TcpStream::connect((&hostname[..], port)));
     let sbuf: [u8; 1] = [secret];
     try!(stream.write_all(&sbuf[..]));

@@ -7,7 +7,7 @@
 /// ```
 /// let port = 8080u16;
 /// let master = MasterNode(port).ok().unwrap();
-/// let worker: TcpStream = master.connect(("remote_host", 22u16), "/tmp/worker_binary").ok.unwrap();
+/// let worker: TcpStream = master.connect(("remote_host", 22u16), "username", "/tmp/worker_binary").ok.unwrap();
 /// ```
 /// This connects to the SSH server running on `remote_host:22`, copies over the
 /// binary located at `/tmp/worker_binary` on the master node, sets a few environment
@@ -16,13 +16,12 @@
 /// The worker code is simple too:
 /// ```
 /// fn main() {
-///     let master: TcpStream = socket_to_master().ok().unwrap();
+///     let master: TcpStream = get_master_stream().ok().unwrap();
 /// }
 /// ```
 ///
 /// That's all there is to it.  If you want anything more advanced, you'll need
 /// to build on these sockets :)
-
 #[macro_use]
 extern crate log;
 extern crate ssh2;

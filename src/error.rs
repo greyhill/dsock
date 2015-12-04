@@ -1,5 +1,5 @@
 use std::io;
-use ::ssh2;
+use ssh2;
 
 #[derive(Debug)]
 pub enum Error {
