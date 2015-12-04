@@ -9,7 +9,8 @@ pub fn get_master_stream() -> Result<net::TcpStream, Error> {
 
     let hostname: String = args.next().unwrap();
     let port: u16 = args.next()
-                        .unwrap().parse()
+                        .unwrap()
+                        .parse()
                         .ok()
                         .unwrap();
     let secret: u8 = args.next()
