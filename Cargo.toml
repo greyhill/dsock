@@ -1,0 +1,17 @@
+[package]
+name = "dsock"
+version = "0.0.1"
+authors = ["Madison McGaffin <greyhill@gmail.com>"]
+
+[lib]
+path="src/lib.rs"
+
+[dependencies.log]
+log = "0.3.4"
+
+[dependencies.ssh2]
+ssh2 = "0.2.10"
+
+[dependencies.rand]
+rand = "0.3"
+
