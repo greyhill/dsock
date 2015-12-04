@@ -25,25 +25,6 @@ impl MasterNode {
         })
     }
 
-    fn accept_secret(self: &Self, secret: u8) -> Result<net::TcpStream, Error> {
-        loop {
-            match self.listener.accept() {
-                Ok((mut stream, _)) => {
-                    let mut b: [u8; 1] = [0];
-                    if !stream.read(&mut b[..]).ok().is_some() {
-                        continue;
-                    }
-                    if b[0] == secret {
-                        return Ok(stream);
-                    }
-                }
-                Err(_) => {
-                    // keep trying
-                }
-            }
-        }
-    }
-
     pub fn connect<A: net::ToSocketAddrs, P: AsRef<path::Path>, S: AsRef<str>>
                                                                                (self: &mut Self,
                                                                                 addr: A,
@@ -95,5 +76,24 @@ impl MasterNode {
         self.session_store.push((ssh_socket, ssh_session));
 
         Ok((worker_id, tcp_socket))
+    }
+
+    fn accept_secret(self: &Self, secret: u8) -> Result<net::TcpStream, Error> {
+        loop {
+            match self.listener.accept() {
+                Ok((mut stream, _)) => {
+                    let mut b: [u8; 1] = [0];
+                    if !stream.read(&mut b[..]).ok().is_some() {
+                        continue;
+                    }
+                    if b[0] == secret {
+                        return Ok(stream);
+                    }
+                }
+                Err(_) => {
+                    // keep trying
+                }
+            }
+        }
     }
 }
