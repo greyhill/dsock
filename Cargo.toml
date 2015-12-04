@@ -1,18 +1,18 @@
 [package]
 name = "dsock"
-version = "0.0.1"
+version = "0.0.2"
 authors = ["Madison McGaffin <greyhill@gmail.com>"]
 
 [lib]
 name = "dsock"
 path="src/lib.rs"
 
-[dependencies.log]
+[dependencies]
 log = "0.3.4"
+rand = { version = "0.3", optional = true }
+ssh2 = { version = "0.2.10", optional = true }
 
-[dependencies.ssh2]
-ssh2 = "0.2.10"
-
-[dependencies.rand]
-rand = "0.3"
+[features]
+default = []
+master = ["ssh2", "rand"]
 

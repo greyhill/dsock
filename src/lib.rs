@@ -24,13 +24,18 @@
 /// to build on these sockets :)
 #[macro_use]
 extern crate log;
-extern crate ssh2;
+#[cfg(feature="master")]
 extern crate rand;
 
+#[cfg(feature="master")]
+extern crate ssh2;
+#[cfg(feature="master")]
 mod master_socket;
+#[cfg(feature="master")]
+pub use master_socket::MasterNode;
+
 mod worker_socket;
 mod error;
 
 pub use error::Error;
-pub use master_socket::MasterNode;
 pub use worker_socket::get_master_stream;
