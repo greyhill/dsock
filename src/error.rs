@@ -1,4 +1,5 @@
 use std::io;
+#[cfg(feature="master")]
 use ssh2;
 
 #[derive(Debug)]
@@ -14,6 +15,7 @@ impl From<io::Error> for Error {
     }
 }
 
+#[cfg(feature="master")]
 impl From<ssh2::Error> for Error {
     fn from(_: ssh2::Error) -> Error {
         Error::SSHError

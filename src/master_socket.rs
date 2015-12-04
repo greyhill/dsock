@@ -77,12 +77,14 @@ impl MasterNode {
 
         // start a new channel and set environment variables
         {
+            let worker_id = self.session_store.len() as u32;
             // run the binary we copied over earlier
             let mut channel = try!(ssh_session.channel_session());
-            try!(channel.exec(&format!("/tmp/dsock_binary \"{}\" \"{}\" \"{}\"",
+            try!(channel.exec(&format!("/tmp/dsock_binary \"{}\" \"{}\" \"{}\" \"{}\"",
                                        self.hostname,
                                        self.port,
-                                       secret)[..]));
+                                       secret,
+                                       worker_id)[..]));
         }
 
 
