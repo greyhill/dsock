@@ -66,7 +66,7 @@ impl MasterNode {
                                        self.port,
                                        secret,
                                        worker_id)[..]));
-            forget!(channel);
+            mem::forget(channel);
         }
 
 
