@@ -25,8 +25,6 @@ pub fn get_master_stream() -> Result<(net::TcpStream, u32), Error> {
                       .unwrap();
 
     let mut stream = try!(net::TcpStream::connect((&hostname[..], port)));
-    try!(stream.set_read_timeout(None));
-    try!(stream.set_write_timeout(None));
     let sbuf: [u8; 1] = [secret];
     try!(stream.write_all(&sbuf[..]));
     try!(stream.flush());
