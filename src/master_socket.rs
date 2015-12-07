@@ -82,7 +82,7 @@ impl MasterNode {
         loop {
             match self.listener.accept() {
                 Ok((mut stream, _)) => {
-                    let mut b: [u8; 1] = [0];
+                    let mut b: [u8; 1024] = [0; 1024];
                     if !stream.read(&mut b[..]).ok().is_some() {
                         continue;
                     }
