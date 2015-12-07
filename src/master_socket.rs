@@ -6,6 +6,7 @@ use std::fs;
 use std::io::{Read, Write};
 use rand;
 use ssh2;
+use std::mem;
 
 pub struct MasterNode {
     hostname: String,
