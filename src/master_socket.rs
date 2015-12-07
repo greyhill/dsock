@@ -82,6 +82,8 @@ impl MasterNode {
         loop {
             match self.listener.accept() {
                 Ok((mut stream, _)) => {
+                    try!(stream.set_read_timeout(None));
+                    try!(stream.set_write_timeout(None));
                     let mut b: [u8; 1] = [0];
                     if !stream.read(&mut b[..]).ok().is_some() {
                         continue;
