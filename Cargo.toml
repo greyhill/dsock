@@ -1,6 +1,6 @@
 [package]
 name = "dsock"
-version = "0.0.2"
+version = "0.0.3"
 authors = ["Madison McGaffin <greyhill@gmail.com>"]
 
 [lib]

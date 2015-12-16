@@ -9,28 +9,27 @@ use ssh2;
 use std::mem;
 
 pub struct MasterNode {
-    hostname: String,
     port: u16,
     listener: net::TcpListener,
     session_store: Vec<(net::TcpStream, ssh2::Session)>,
 }
 
 impl MasterNode {
-    pub fn new(hostname: String, port: u16) -> Result<MasterNode, Error> {
+    pub fn new(port: u16) -> Result<MasterNode, Error> {
         let listener = try!(net::TcpListener::bind(("0.0.0.0", port)));
         Ok(MasterNode {
-            hostname: hostname,
             port: port,
             listener: listener,
             session_store: Vec::new(),
         })
     }
 
-    pub fn connect<A: net::ToSocketAddrs, P: AsRef<path::Path>, S: AsRef<str>>
+    pub fn connect<A: net::ToSocketAddrs, P: AsRef<path::Path>, S: AsRef<str>, S2: AsRef<str>>
                                                                                (self: &mut Self,
                                                                                 addr: A,
                                                                                 username: S,
-                                                                                bin_path: P)
+                                                                                bin_path: P,
+                                                                                hostname: S2)
                                                                                 -> Result<(u32, net::TcpStream), Error> {
         let secret: u8 = rand::random();
 
@@ -48,8 +47,9 @@ impl MasterNode {
 
         // send file to remote host at /tmp/dsock_binary
         // TODO: support windows, use a smarter path?
+        let worker_id = self.session_store.len() as u32;
         {
-            let mut remote_file = try!(ssh_session.scp_send(path::Path::new("/tmp/dsock_binary"),
+            let mut remote_file = try!(ssh_session.scp_send(path::Path::new(format!("/tmp/dsock_binary{}", worker_id)),
                                                             0o700,
                                                             bin_size as u64,
                                                             None));
@@ -58,12 +58,12 @@ impl MasterNode {
         }
 
         // start a new channel and set environment variables
-        let worker_id = self.session_store.len() as u32;
         {
             // run the binary we copied over earlier
             let mut channel = try!(ssh_session.channel_session());
-            try!(channel.exec(&format!("/tmp/dsock_binary \"{}\" \"{}\" \"{}\" \"{}\"",
-                                       self.hostname,
+            try!(channel.exec(&format!("/tmp/dsock_binary{} \"{}\" \"{}\" \"{}\" \"{}\"",
+                                       worker_id,
+                                       hostname.as_ref(),
                                        self.port,
                                        secret,
                                        worker_id)[..]));
