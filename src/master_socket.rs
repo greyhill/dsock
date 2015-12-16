@@ -49,7 +49,7 @@ impl MasterNode {
         // TODO: support windows, use a smarter path?
         let worker_id = self.session_store.len() as u32;
         {
-            let mut remote_file = try!(ssh_session.scp_send(path::Path::new(format!("/tmp/dsock_binary{}", worker_id)),
+            let mut remote_file = try!(ssh_session.scp_send(path::Path::new(&format!("/tmp/dsock_binary{}", worker_id)),
                                                             0o700,
                                                             bin_size as u64,
                                                             None));
